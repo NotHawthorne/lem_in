@@ -18,5 +18,6 @@ int		main(void)
 
 	get_next_line(0, &line);
 	ft_printf("%s\n", line);
+	ft_printf("hello\n");
 	return (0);
 }
