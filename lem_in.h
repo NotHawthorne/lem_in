@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/15 16:17:34 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/17 20:38:39 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/17 20:45:52 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef struct		s_path_list
 {
 	t_path			*path;
 	t_path			*next;
-}
+}					t_path_list;
 
 void				print_path(t_path *p, t_map *m);
 void				print_links(char *str, t_map *in);
