@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/15 16:24:20 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/15 16:36:51 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/17 09:43:37 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 int		main(void)
 {
-	char	*line;
+	t_map	*in;
 
-	get_next_line(0, &line);
-	ft_printf("%s\n", line);
+	if (!(in = (t_map*)malloc(sizeof(t_map))))
+		return (0);
+	guide_ants(in);
 	return (0);
 }

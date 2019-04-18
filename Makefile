@@ -6,14 +6,15 @@
 #    By: alkozma <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 18:06:36 by alkozma           #+#    #+#              #
-#    Updated: 2019/04/15 16:26:50 by alkozma          ###   ########.fr        #
+#    Updated: 2019/04/17 09:34:58 by alkozma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = lem-in
 
 SRCS = input.c \
-	   main.c
+	   main.c \
+	   path.c
 
 OBJECTS = $(patsubst %.c,%.o,$(SRCS))
 
