@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/15 16:17:11 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/17 20:45:49 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/22 13:24:03 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,26 +86,6 @@ int		room_link(char *str, t_map *in)
 	return (0);
 }
 
-void	print_links(char *str, t_map *in)
-{
-	t_room	*tmp;
-	t_link	*tmp2;
-
-	tmp = in->rooms;
-	while (tmp)
-	{
-		if (ft_strcmp(str, tmp->room_id) == 0)
-			break ;
-		tmp = tmp->next;
-	}
-	tmp2 = tmp->links;
-	while (tmp2)
-	{
-		ft_printf("link: %s - %s\n", tmp->room_id, tmp2->dst_room->room_id);
-		tmp2 = tmp2->next;
-	}
-}
-
 int		init_map(t_map *in)
 {
 	char	*line;
@@ -150,6 +130,6 @@ int		init_map(t_map *in)
 	}
 	ft_printf("\n");
 	tst = find_end(in);
-	print_path(tst, in);
+	ft_printf("MAX FLOW: %d\n", max_flow(in));
 	return (0);
 }

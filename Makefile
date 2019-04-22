@@ -6,7 +6,7 @@
 #    By: alkozma <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 18:06:36 by alkozma           #+#    #+#              #
-#    Updated: 2019/04/17 09:34:58 by alkozma          ###   ########.fr        #
+#    Updated: 2019/04/21 10:40:18 by alkozma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = lem-in
 
 SRCS = input.c \
 	   main.c \
-	   path.c
+	   path.c \
+	   flow.c
 
 OBJECTS = $(patsubst %.c,%.o,$(SRCS))
 
@@ -23,7 +24,7 @@ HEADERS = lem_in.h \
 		  includes/ft_printf.h \
 		  includes/libft.h
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 
 all: $(NAME)
 

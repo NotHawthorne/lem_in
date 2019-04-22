@@ -6,138 +6,168 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/17 09:18:46 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/17 20:45:51 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/22 14:02:15 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	add_node(t_room *rm, t_path *path)
+t_path	*copy_path(t_path *path, t_room *room)
 {
 	t_path	*tmp;
 	t_path	*ret;
-	int		i;
+
+	tmp = path;
+	ret = (t_path*)malloc(sizeof(t_path));
+	while (tmp->prev)
+		tmp = tmp->prev;
+	while (tmp)
+	{
+		if (!ret->room)
+		{
+			ret->room = tmp->room;
+			ret->prev = NULL;
+			ret->next = NULL;
+		}
+		else
+		{
+			ret->next = (t_path*)malloc(sizeof(t_path));
+			ret->next->room = tmp->room;
+			ret->next->prev = ret;
+			ret->next->next = NULL;
+			ret = ret->next;
+		}
+		tmp = tmp->next;
+	}
+	ret->next = (t_path*)malloc(sizeof(t_path));
+	ret->next->room = room;
+	ret->next->prev = ret;
+	ret->next->next = NULL;
+	while (ret->prev)
+		ret = ret->prev;
+	return (ret);
+}
+
+void	add_new_path(t_path_list *lst, t_path *path, t_room *room, t_map *in)
+{
+	t_path_list	*tmp;
+	t_map		*m;
+	t_path		*tmpath;
+	int			i;
 
 	i = 0;
-	if (!(ret = (t_path*)malloc(sizeof(t_path))))
-		return ;
-	tmp = path;
+	m = in;
+	tmp = lst;
 	while (tmp->next)
 	{
 		i++;
 		tmp = tmp->next;
 	}
-	ret->len = i;
-	ret->room = rm;
-	ret->prev = tmp;
-	if (!tmp->room)
-		*path = *ret;
-	else
-		tmp->next = ret;
+	tmpath = copy_path(path, room);
+	tmp->next = (t_path_list*)malloc(sizeof(t_path_list));
+	tmp->next->path = tmpath;
+	tmp->next->next = NULL;
+	tmp->next->length = 0;
 }
 
-t_path	*move_back_one(t_path *p)
+int		step(t_path_list *lst, t_map *in)
 {
-	t_path *tmp;
+	t_path_list	*tmp;
+	t_path		*tmp_path;
+	t_link		*tmp_link;
 
-	tmp = p;
-	while (tmp->next)
-		tmp = tmp->next;
-	tmp = tmp->prev;
-	free(tmp->next);
-	tmp->next = NULL;
-	return (tmp);
-}
-
-int		visited(t_room *tmp, t_room *stack)
-{
-	t_room *tst;
-
-	tst = stack;
-	while (tst && tmp && tst->next)
+	tmp = lst;
+	while (tmp)
 	{
-		if (!(tst->room_id))
-			break ;
-		if (ft_strcmp(tmp->room_id, tst->room_id) == 0)
-			return (1);
-		tst = tst->next;
+		tmp_path = tmp->path;
+		while (tmp_path->next)
+			tmp_path = tmp_path->next;
+		tmp_link = tmp_path->room->links;
+		while (tmp_link)
+		{
+			add_new_path(lst, tmp_path, tmp_link->dst_room, in);
+			if (ft_strcmp(tmp_link->dst_room->room_id, in->end->room_id) == 0)
+				return (1);
+			tmp_link = tmp_link->next;
+		}
+		tmp = tmp->next;
 	}
 	return (0);
 }
 
-void	add_to_stack(t_room *room, t_room *stack)
+int		is_full_path(t_path *path, t_map *in)
 {
-	t_room	*tmp;
+	t_path	*tmp;
+	int		found_start;
+	int		found_end;
 
-	tmp = stack;
-	if (!tmp->room_id)
+	tmp = path;
+	found_end = 0;
+	found_start = 0;
+	while (tmp)
 	{
-		*stack = *room;
-		stack->next = NULL;
+		if (ft_strcmp(tmp->room->room_id, in->end->room_id) == 0)
+			found_end = 1;
+		if (ft_strcmp(tmp->room->room_id, in->start->room_id) == 0)
+			found_start = 1;
+		if (found_end == 1 && found_start == 1)
+			return (1);
+		tmp = tmp->next;
 	}
-	else
+	return (0);
+}
+
+void	print_path_list(t_path_list **p, t_map *in)
+{
+	t_path_list	*tmp;
+	int			i;
+
+	i = 0;
+	tmp = *p;
+	while (tmp)
 	{
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = room;
-		tmp->next->next = NULL;
+		if (is_full_path(tmp->path, in))
+		{
+			ft_printf("PATH %d\n", i++);
+			print_path(tmp->path, in);
+		}
+		tmp = tmp->next;
 	}
 }
 
 t_path	*find_end(t_map *in)
 {
-	t_path	*ret;
-	t_room	*tmp;
-	t_room	*stack;
-	int		i;
+	t_path_list	*lst;
+	t_path		*initpath;
 
-	if (!(stack = (t_room*)malloc(sizeof(t_room))))
+	if (!(lst = (t_path_list*)malloc(sizeof(t_path_list))))
 		return (NULL);
-	if (!(ret = (t_path*)malloc(sizeof(t_path))))
+	if (!(initpath = (t_path*)malloc(sizeof(t_path))))
 		return (NULL);
-	tmp = in->start;
-	i = 0;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->room_id, in->end->room_id) == 0)
-			break ;
-		if (visited(tmp, stack))
-			tmp = move_back_one(ret)->room;
-		else
-		{
-			add_to_stack(tmp, stack);
-			add_node(tmp, ret);
-			if (ft_strcmp(tmp->room_id, in->end->room_id) == 0)
-				return (ret);
-			while (tmp->links->dst_room && visited(tmp->links->dst_room, stack))
-				tmp->links = tmp->links->next;
-			if (!tmp->links)
-				tmp = move_back_one(ret)->room;
-			else
-			{
-				tmp = tmp->links->dst_room;
-				if (ret->next)
-					ret = ret->next;
-			}
-		}
-	}
-	return (ret);
+	initpath->room = in->start;
+	initpath->prev = NULL;
+	initpath->next = NULL;
+	lst->path = initpath;
+	while (step(lst, in) == 0) ;
+	print_path_list(&lst, in);
+	return (initpath);
 }
 
 void	print_path(t_path *p, t_map *m)
 {
 	t_path	*tmp;
+	t_map	*map;
 
+	map = m;
 	tmp = p;
-	ft_printf("%s\n", m->end->room_id);
+	while (tmp->prev)
+		tmp = tmp->prev;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->room->room_id, m->start->room_id) == 0)
-			break ;
-		ft_printf("%s\n", tmp->room->room_id);
-		tmp = tmp->prev;
+		if (tmp->room)
+			ft_printf("%s\n", tmp->room->room_id);
+		tmp = tmp->next;
 	}
-	ft_printf("%s\n", m->start->room_id);
 }
 
 int		guide_ants(t_map *in)
