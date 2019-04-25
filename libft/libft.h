@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:13:01 by alkozma           #+#    #+#             */
-/*   Updated: 2019/02/15 13:04:53 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/23 03:21:10 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,6 @@ void				*ft_memccpy(void *dst, const void *src, int c, size_t n);
 void				*ft_memmove(void *dst, const void *src, size_t len);
 void				*ft_memalloc(size_t size);
 void				*ft_memchr(const void *s, int c, size_t n);
+void				*ft_realloc(void *thing, size_t orig_size, size_t size);
 
 #endif

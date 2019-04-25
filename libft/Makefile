@@ -6,7 +6,7 @@
 #    By: alkozma <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/02/11 15:35:39 by alkozma           #+#    #+#              #
-#    Updated: 2019/03/13 18:23:56 by alkozma          ###   ########.fr        #
+#    Updated: 2019/04/23 03:14:55 by alkozma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,7 +83,8 @@ SRC = ft_atoi.c \
 	  ft_printf_flags.c \
 	  ft_printf.c \
 	  ft_printf_jump.c \
-	  ft_strslc.c
+	  ft_strslc.c \
+	  ft_realloc.c
 
 OBJ = ft_atoi.o \
 	  ft_bzero.o \
@@ -156,7 +157,8 @@ OBJ = ft_atoi.o \
 	  ft_printf.o \
 	  get_next_line.o \
 	  ft_printf_jump.o \
-	  ft_strslc.o
+	  ft_strslc.o \
+	  ft_realloc.o
 
 GCH = libft.gch
 

@@ -1,43 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   flow.c                                             :+:      :+:    :+:   */
+/*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/17 20:49:44 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/22 14:02:18 by alkozma          ###   ########.fr       */
+/*   Created: 2019/04/23 03:05:57 by alkozma           #+#    #+#             */
+/*   Updated: 2019/04/23 03:29:54 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem_in.h"
+#include "libft.h"
 
-int		max_flow(t_map *in)
+void	*ft_realloc(void *thing, size_t orig_size, size_t size)
 {
+	void	*ret;
 	int		i;
-	int		b;
-	t_link	*tmp;
-	t_room	*tmprm;
 
-	i = 0;
-	b = 0;
-	tmp = in->start->links;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	tmprm = in->start;
-	while (tmprm)
-	{
-		tmp = tmprm->links;
-		while (tmp)
-		{
-			if (ft_strcmp(tmp->dst_room->room_id, in->end->room_id) == 0)
-				b++;
-			tmp = tmp->next;
-		}
-		tmprm = tmprm->next;
-	}
-	return (i > b ? b : i);
+	i = -1;
+	if (!(ret = (void*)malloc(size)))
+		return (NULL);
+	if (!thing)
+		return (ret);
+	if (orig_size <= size)
+		ft_memcpy(ret, thing, size);
+	else
+		ft_memcpy(ret, thing, orig_size);
+	free(thing);
+	thing = NULL;
+	return (ret);
 }
