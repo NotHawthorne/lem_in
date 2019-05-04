@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/16 15:43:48 by alkozma           #+#    #+#             */
-/*   Updated: 2019/03/10 18:33:47 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/27 06:47:24 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static t_list	*find_file(int fd, t_list **lst)
 			return (tmp);
 		tmp = tmp->next;
 	}
-	tmp = ft_lstnew("\0", fd);
+	tmp = ft_lstnew(0, fd);
+	tmp->content = ft_strnew(1);
 	ft_lstadd(lst, tmp);
 	tmp = *lst;
 	return (tmp);

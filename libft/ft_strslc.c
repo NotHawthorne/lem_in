@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/15 12:56:09 by alkozma           #+#    #+#             */
-/*   Updated: 2019/02/17 20:07:28 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/27 06:43:03 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*ft_strslc(char *str, size_t start, size_t end)
 	if (!(tmp = ft_strdup(str)))
 		return (NULL);
 	ft_bzero(str, len);
-	while (i <= len)
+	while (i < len)
 	{
 		if (i >= start && i <= end)
 			i++;

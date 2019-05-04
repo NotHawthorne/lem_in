@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/11 16:13:01 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/23 03:21:10 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/27 09:03:41 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct		s_list
 	struct s_list	*next;
 }					t_list;
 
+char				*ft_strjoin_array(char **strs, char *tok);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char				*ft_strstr(const char *haystack, const char *needle);
 char				*ft_strncat(char *s1, const char *s2, size_t n);

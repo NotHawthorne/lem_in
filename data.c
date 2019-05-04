@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:41:11 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/23 05:20:03 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/04/27 09:15:41 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	**get_links(t_map *in, char *room)
 	if (!(ret = (char**)malloc(sizeof(char*))))
 		return (NULL);
 	ret[0] = NULL;
-	while (in->links[i])
+	while (in->links && in->links[i])
 	{
 		tmp = ft_strsplit(in->links[i], '-');
 		if (ft_strcmp(room, tmp[0]) == 0)

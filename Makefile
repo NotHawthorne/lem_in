@@ -6,7 +6,7 @@
 #    By: alkozma <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 18:06:36 by alkozma           #+#    #+#              #
-#    Updated: 2019/04/23 05:37:36 by alkozma          ###   ########.fr        #
+#    Updated: 2019/04/27 08:54:53 by alkozma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME = lem-in
 
 SRCS = main.c \
 	   data.c \
-	   path.c
+	   path.c \
+	   flow.c
 
 OBJECTS = $(patsubst %.c,%.o,$(SRCS))
 

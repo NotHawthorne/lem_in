@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:23:22 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/25 01:21:12 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/03 19:49:47 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,17 @@ t_map	*init_map(void)
 	t_map	*map;
 	char	*line;
 
-	if (!(map = (t_map*)malloc(sizeof(t_map))) || get_next_line(0, &line) <= 0)
+	if (!(map = (t_map*)malloc(sizeof(t_map))))
 		return (NULL);
-	line++;
+	get_next_line(0, &line);
 	ft_printf("%s\n", line);
 	map->start = NULL;
 	map->ants = ft_atoi(line);
 	map->end = NULL;
 	map->rooms = NULL;
-	map->links = NULL;
+	map->links = (char**)malloc(sizeof(char*) * 2);
+	map->links[0] = NULL;
+	map->links[1] = NULL;
 	map->paths = (char***)malloc(sizeof(char**) * 2);
 	map->paths[0] = (char**)malloc(sizeof(char*) * 2);
 	map->paths[1] = NULL;
@@ -85,6 +87,7 @@ int		main(void)
 	}
 	ft_printf("\n");
 	step(map);
+	map->paths = best_paths(map);
 	print_paths(map);
 	free_map(map);
 }
@@ -102,7 +105,7 @@ void	print_paths(t_map *map)
 			n = 0;
 			while (map->paths[i][n])
 				ft_printf("%s->", map->paths[i][n++]);
-			ft_printf("\n");
+			ft_printf(" (%d independant paths)\n", independant_paths(map->paths[i], map));
 		}
 		i++;
 	}
