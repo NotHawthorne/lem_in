@@ -28,6 +28,26 @@ typedef	struct	s_map
 	char		***paths;
 }				t_map;
 
+typedef struct 		s_room
+{
+	char			*name;
+	struct s_room	*next;
+}					t_room;
+
+typedef struct		s_path
+{
+	t_room			*rooms;
+	struct s_path	*next;
+}					t_path;
+
+typedef struct 		s_ant
+{
+	int				nb;
+	t_room			*rooms;
+	struct s_ant	*next;
+	struct s_ant	*last;
+}					t_ant;
+
 int				add_room(t_map *in, char *room);
 int				add_link(t_map *in, char *link);
 int				step(t_map *in);
