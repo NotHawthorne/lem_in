@@ -40,26 +40,6 @@ void	list_addroom(t_path *path, char *name)
 	}
 }
 
-void	list_printpaths(t_path *paths)
-{
-	t_room *rooms;
-	int i = 0;
-	if (!paths)
-		return ;
-	while (paths)
-	{
-		ft_printf("path: %d\n", i++);
-		rooms = paths->rooms;
-		while (rooms)
-		{
-			ft_printf("%s->", rooms->name);
-			rooms = rooms->next;
-		}
-		ft_printf("end\n");
-		paths = paths->next;
-	}
-}
-
 void	list_makeant(t_ant **ants, t_room *rooms, int ant_nb)
 {
 	t_ant	*new;
@@ -205,5 +185,4 @@ void	print_paths(t_map *map)
 		i++;
 	}
 	release_ants(paths, map->ants);
-	//list_printpaths(paths);
 }
