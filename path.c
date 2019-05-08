@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 05:10:42 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/03 19:10:22 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/06 21:43:59 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ int		step(t_map *in)
 
 	i = 0;
 	found = 0;
+	ft_printf("STEPPING\n");
 	while (in->paths[i])
 	{
 		n = 0;
@@ -129,5 +130,6 @@ int		step(t_map *in)
 		}
 		i++;
 	}
+	ft_printf("STEPPED\n");
 	return (1);
 }

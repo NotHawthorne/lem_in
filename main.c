@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:23:22 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/03 19:49:47 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/06 16:38:06 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,8 @@ int		main(void)
 		if (line[0] == '#')
 		{
 			tmp = ft_strdup(line);
-			get_next_line(0, &line);
+			if (get_next_line(0, &line) == 0)
+				break;
 			ft_printf("%s\n", line);
 			if (ft_strcmp(tmp, "##start") == 0)
 			{
