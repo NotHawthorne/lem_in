@@ -15,7 +15,8 @@ NAME = lem-in
 SRCS = main.c \
 	   data.c \
 	   path.c \
-	   flow.c
+	   flow.c \
+	   printer.c
 
 OBJECTS = $(patsubst %.c,%.o,$(SRCS))
 
