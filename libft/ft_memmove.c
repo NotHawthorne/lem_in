@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/12 20:24:35 by alkozma           #+#    #+#             */
-/*   Updated: 2019/02/13 12:51:15 by alkozma          ###   ########.fr       */
+/*   Created: 2018/04/28 22:11:25 by calamber          #+#    #+#             */
+/*   Updated: 2018/05/07 16:39:47 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,29 @@
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	unsigned char	*dsts;
-	unsigned char	*srcs;
-	size_t			i;
+	char	*d;
+	char	*s;
+	size_t	i;
 
-	dsts = (unsigned char*)dst;
-	srcs = (unsigned char*)src;
+	d = (char*)dst;
+	s = (char*)src;
 	i = 0;
-	if (srcs < dsts)
+	if (d == s)
+		return (d);
+	if (s < d)
 	{
-		while (len > 0)
-		{
-			len--;
-			dsts[len] = srcs[len];
-		}
+		i = len;
+		while (i--)
+			((char *)d)[i] = ((char *)s)[i];
 	}
 	else
-		ft_memcpy(dst, src, len);
-	return ((unsigned char*)dst);
+	{
+		i = 0;
+		while (i < len)
+		{
+			((char *)d)[i] = ((char *)s)[i];
+			i++;
+		}
+	}
+	return (d);
 }

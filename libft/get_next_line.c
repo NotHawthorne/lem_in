@@ -1,84 +1,91 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line2.c                                   :+:      :+:    :+:   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/16 15:43:48 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/27 06:47:24 by alkozma          ###   ########.fr       */
+/*   Created: 2018/06/30 19:38:09 by calamber          #+#    #+#             */
+/*   Updated: 2019/03/24 10:20:15 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#include <fcntl.h>
+#include "libft.h"
 
-static t_list	*find_file(int fd, t_list **lst)
+#define RET_IF(cond, ret) if (cond) return (ret)
+
+static void			gnl_loop(int fd, char **line, char buf[BUFF_SIZE], int nl)
 {
-	t_list	*tmp;
+	ssize_t			rret;
+	char			*tmp1;
+	char			*tmp2;
+	size_t			len;
 
-	tmp = *lst;
-	if (fd < 0)
-		return (NULL);
-	while (tmp)
+	rret = 1;
+	while (!(nl) && rret > 0)
 	{
-		if ((int)tmp->content_size == fd)
-			return (tmp);
-		tmp = tmp->next;
+		rret = read(fd, buf, BUFF_SIZE);
+		len = 0;
+		while (len < BUFF_SIZE && buf[len] != '\n')
+			len++;
+		if (buf[len] == '\n')
+			nl = 1;
+		tmp2 = ft_strndup(buf, len);
+		tmp1 = ft_strjoin(*line, tmp2);
+		free(*line);
+		*line = tmp1;
+		free(tmp2);
+		ft_bzero(buf, len + nl);
 	}
-	tmp = ft_lstnew(0, fd);
-	tmp->content = ft_strnew(1);
-	ft_lstadd(lst, tmp);
-	tmp = *lst;
-	return (tmp);
 }
 
-static int		tokloc(char *str, char c)
+static size_t		gnl_find_i(char buf[BUFF_SIZE], size_t *i)
 {
-	int i;
-
-	i = 0;
-	if (!ft_strchr(str, c))
-		return (-1);
-	while (str[i] != c)
-		i++;
-	return (i);
-}
-
-static void		strbecome(char **dst, char *src)
-{
-	char	*tmp;
-
-	tmp = ft_strjoin(*dst, src);
-	ft_strdel(dst);
-	*dst = tmp;
-}
-
-int				get_next_line(const int fd, char **line)
-{
-	static t_list	*lst;
-	int				i;
-	int				read_bytes;
-	char			buf[BUFF_SIZE + 1];
-	t_list			*tst;
-
-	MEMCHK((fd < 4865 && fd >= 0 && (tst = find_file(fd, &lst))));
-	CONTENTCHK(((char*)tst->content) && *line);
-	while (!ft_strchr((char*)tst->content, '\n') &&
-			(read_bytes = read(fd, buf, BUFF_SIZE)) > 0)
+	*i = 0;
+	while (*i < BUFF_SIZE && buf[*i] == 0)
+		*i = *i + 1;
+	if (*i == BUFF_SIZE)
 	{
-		buf[read_bytes] = '\0';
-		strbecome((char**)&tst->content, buf);
-		if (ft_strchr(buf, '\n'))
-			break ;
+		*i = 0;
+		return (1);
 	}
-	if (!ft_strlen((char*)tst->content))
-		return (read_bytes);
-	i = tokloc((char*)tst->content, '\n');
-	*line = i >= 0 ? ft_strsub((char*)tst->content, 0, i)
-		: ft_strdup((char*)tst->content);
-	tst->content = i >= 0 ? ft_strslc((char*)tst->content, 0, i) : tst->content;
-	if (i == -1)
-		ft_strdel((char**)&tst->content);
+	return (0);
+}
+
+static size_t		gnl_find_len(char buf[BUFF_SIZE], size_t i)
+{
+	size_t len;
+
+	len = 0;
+	while (i + len < BUFF_SIZE && buf[i + len] != '\n')
+		len++;
+	return (len);
+}
+
+int					get_next_line(const int fd, char **line)
+{
+	static char		buf[255][BUFF_SIZE];
+	size_t			i;
+	size_t			len;
+	ssize_t			rret;
+	int				nl;
+
+	RET_IF(fd < 0 || fd >= 255 || !(line) || BUFF_SIZE < 1, -1);
+	rret = BUFF_SIZE;
+	nl = 0;
+	if (gnl_find_i(buf[fd], &i))
+	{
+		RET_IF((rret = read(fd, buf[fd], BUFF_SIZE)) == -1, -1);
+		RET_IF(rret == 0, 0);
+	}
+	len = gnl_find_len(buf[fd], i);
+	*line = ft_strndup(buf[fd] + i, len);
+	if (buf[fd][i + len] == '\n')
+	{
+		len++;
+		nl = 1;
+	}
+	ft_bzero(buf[fd] + i, len);
+	gnl_loop(fd, line, buf[fd], nl);
 	return (1);
 }

@@ -25,14 +25,14 @@ HEADERS = lem_in.h \
 		  includes/ft_printf.h \
 		  includes/libft.h
 
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+FLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 
 all: $(NAME)
 
 $(NAME):
 	make -C libft
 	cp libft/libft.a ./
-	gcc $(SRCS) libft.a -Iincludes $(FLAGS) -o $(NAME)
+	gcc $(SRCS) libft.a -I includes $(FLAGS) -o $(NAME)
 
 clean:
 	make -C libft clean

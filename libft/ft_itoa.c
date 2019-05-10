@@ -3,33 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/13 16:26:05 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/03 19:14:17 by alkozma          ###   ########.fr       */
+/*   Created: 2018/05/04 00:24:45 by calamber          #+#    #+#             */
+/*   Updated: 2018/05/04 16:51:33 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char		*ft_itoa(int n)
+char	*ft_itoa(long long nbr)
 {
-	char			*ret;
-	int				len;
-	int				cpy;
-	unsigned int	num;
+	int			length;
+	long long	sign;
+	char		*str;
 
-	num = n < 0 ? -n : n;
-	cpy = n;
-	len = 1;
-	while (cpy /= 10)
-		len++;
-	len += n < 0 ? 1 : 0;
-	if (!(ret = (char*)ft_strnew(len)))
+	sign = nbr;
+	length = 1;
+	while (sign /= 10)
+		length++;
+	sign = nbr < 0 ? 1 : 0;
+	length = (nbr < 0) ? (length + 1) : (length);
+	str = ft_strnew(length);
+	if (!str)
 		return (NULL);
-	ret[--len] = (num % 10) + 48;
-	while (num /= 10)
-		ret[--len] = (num % 10) + 48;
-	*ret = n < 0 ? '-' : *ret;
-	return (ret);
+	if (sign)
+		str[0] = '-';
+	nbr = (nbr < 0) ? (nbr * -1) : nbr;
+	while (--length >= sign)
+	{
+		str[length] = (nbr >= 10) ? (nbr % 10) + 48 : nbr + 48;
+		nbr /= 10;
+	}
+	str[ft_strlen(str)] = '\0';
+	return (str);
 }

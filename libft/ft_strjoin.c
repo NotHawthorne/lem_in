@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/13 14:15:48 by alkozma           #+#    #+#             */
-/*   Updated: 2019/04/27 09:03:32 by alkozma          ###   ########.fr       */
+/*   Created: 2018/05/04 00:20:34 by calamber          #+#    #+#             */
+/*   Updated: 2018/05/04 16:52:34 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,29 @@
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*ret;
 	int		i;
+	int		j;
+	char	*str;
 
+	if (!s1 || !s2)
+		return (NULL);
 	i = 0;
-	ret = 0;
-	if (s1 && s2)
+	j = 0;
+	str = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (str == NULL)
+		return (NULL);
+	while (s1[i] != '\0')
 	{
-		if (!(ret = (char*)malloc(ft_strlen(s1) + ft_strlen(s2) + 1)))
-			return (NULL);
-		while (*s1)
-			ret[i++] = *s1++;
-		while (*s2)
-			ret[i++] = *s2++;
-		ret[i] = '\0';
+		str[i] = s1[i];
+		i++;
 	}
-	return (ret);
+	while (s2[j] != '\0')
+	{
+		str[i + j] = s2[j];
+		j++;
+	}
+	str[i + j] = '\0';
+	return (str);
 }
 
 char	*ft_strjoin_array(char **strs, char *tok)
@@ -37,7 +44,7 @@ char	*ft_strjoin_array(char **strs, char *tok)
 	char	*ret;
 	int		i;
 
-	ret = ft_strnew(1);
+	ret = "";
 	i = 0;
 	while (strs[i])
 	{

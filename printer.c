@@ -159,6 +159,10 @@ void	release_ants(t_path *paths, int nb_ants)
 		step_ants(&ants);
 		ft_printf("\n");
 	}
+	//while (paths)
+	//{
+	//	paths = paths->next;
+	//}
 }
 
 void	print_paths(t_map *map)

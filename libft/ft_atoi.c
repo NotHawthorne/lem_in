@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: calamber <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/02/12 17:38:39 by alkozma           #+#    #+#             */
-/*   Updated: 2019/02/14 12:57:28 by alkozma          ###   ########.fr       */
+/*   Created: 2018/04/24 19:17:59 by calamber          #+#    #+#             */
+/*   Updated: 2018/05/04 16:50:54 by calamber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,27 @@
 
 int		ft_atoi(const char *str)
 {
-	int	neg;
-	int ret;
+	size_t i;
+	size_t ret;
+	size_t sign;
 
-	neg = 1;
+	i = 0;
 	ret = 0;
-	while (*str == '\t' || *str == '\n' || *str == '\v' ||
-			*str == '\f' || *str == '\r' || *str == ' ')
-		str++;
-	if (*str == '-' || *str == '+')
-		neg = *str++ == '-' ? -1 : 1;
-	while (*str >= '0' && *str <= '9')
+	sign = 1;
+	while (str[i] == ' ' || str[i] == '\n' || str[i] == '\r' ||
+			str[i] == '\t' || str[i] == '\v' || str[i] == '\f')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (ret == 214748364 && *str == '8')
-			return (-2147483648);
-		ret = (ret * 10) + (*str++ - '0');
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	return (ret * neg);
+	while (str[i] && str[i] >= '0' && str[i] <= '9')
+	{
+		ret *= 10;
+		ret += str[i] - '0';
+		i++;
+	}
+	return (ret * sign);
 }

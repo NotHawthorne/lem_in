@@ -52,7 +52,7 @@ char	**get_links(t_map *in, char *room)
 	int		i;
 
 	i = 0;
-	if (!(ret = (char**)malloc(sizeof(char*))))
+	if (!(ret = (char**)ft_memalloc(sizeof(char*))))
 		return (NULL);
 	ret[0] = NULL;
 	while (in->links && in->links[i])

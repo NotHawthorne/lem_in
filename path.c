@@ -35,10 +35,10 @@ void	add_path(char ***paths, char **path, char *room, t_map *in)
 	n = 0;
 	while (path[n])
 		n++;
-	paths[i] = (char**)malloc(sizeof(char*) * (n + 2));
+	paths[i] = (char**)ft_memalloc(sizeof(char*) * (n + 2));
 	paths[i + 1] = NULL;
 	x = 0;
-	while (paths[i][x] && x < n)
+	while (path[x] && x < n)
 	{
 		paths[i][x] = ft_strdup(path[x]);
 		x++;
@@ -106,6 +106,7 @@ int		step(t_map *in)
 	int		n;
 	char	**links;
 	int		found;
+	char	*DEBUG;
 
 	i = 0;
 	found = 0;
@@ -116,6 +117,8 @@ int		step(t_map *in)
 		while (in->paths[i][n])
 			n++;
 		n--;
+		if (i == 1)
+			DEBUG = in->paths[i - 1][n + 1];
 		links = get_links(in, in->paths[i][n]);
 		x = 0;
 		while (links[x])

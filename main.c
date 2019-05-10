@@ -18,7 +18,7 @@ t_map	*init_map(void)
 	t_map	*map;
 	char	*line;
 
-	if (!(map = (t_map*)malloc(sizeof(t_map))))
+	if (!(map = (t_map*)ft_memalloc(sizeof(t_map))))
 		return (NULL);
 	get_next_line(0, &line);
 	ft_printf("%s\n", line);
@@ -26,11 +26,11 @@ t_map	*init_map(void)
 	map->ants = ft_atoi(line);
 	map->end = NULL;
 	map->rooms = NULL;
-	map->links = (char**)malloc(sizeof(char*) * 2);
+	map->links = (char**)ft_memalloc(sizeof(char*) * 2);
 	map->links[0] = NULL;
 	map->links[1] = NULL;
-	map->paths = (char***)malloc(sizeof(char**) * 2);
-	map->paths[0] = (char**)malloc(sizeof(char*) * 2);
+	map->paths = (char***)ft_memalloc(sizeof(char**) * 2);
+	map->paths[0] = (char**)ft_memalloc(sizeof(char*) * 2);
 	map->paths[1] = NULL;
 	map->paths[0][0] = NULL;
 	map->paths[0][1] = NULL;
@@ -91,4 +91,6 @@ int		main(void)
 	map->paths = best_paths(map);
 	print_paths(map);
 	free_map(map);
+	//while (1)
+	//	;
 }
