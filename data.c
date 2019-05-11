@@ -6,25 +6,16 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:41:11 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/03 20:46:01 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 09:53:32 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	print_rooms(t_map *in)
+void	add_link_arr(unsigned long **tst, unsigned long room)
 {
-	int	i;
-
-	i = 0;
-	while (in->rooms[i])
-		ft_printf("%s\n", in->rooms[i++]);
-}
-
-void	add_link_arr(char ***tst, char *room)
-{
-	int	i;
-	char	**rooms;
+	int				i;
+	unsigned long	*rooms;
 
 	i = 0;
 	rooms = *tst;
@@ -32,51 +23,57 @@ void	add_link_arr(char ***tst, char *room)
 		i++;
 	if (!rooms[0])
 	{
-		rooms = (char**)ft_realloc(rooms, sizeof(char*), sizeof(char*) * 2);
+		rooms = (unsigned long*)ft_realloc(rooms, sizeof(unsigned long), sizeof(unsigned long) * 2);
 		rooms[0] = room;
-		rooms[1] = NULL;
+		rooms[1] = 0;
 	}
 	else
 	{
-		rooms = (char**)ft_realloc(rooms, sizeof(char*) * (i + 1), sizeof(char*) * (i + 2));
-		rooms[i] = ft_strdup(room);
-		rooms[i + 1] = NULL;
+		rooms = (unsigned long*)ft_realloc(rooms, sizeof(unsigned long) * (i + 1), sizeof(unsigned long) * (i + 2));
+		rooms[i] = room;
+		rooms[i + 1] = 0;
 	}
 	*tst = rooms;
 }
 
-char	**get_links(t_map *in, char *room)
+unsigned long *get_links(t_map *in, char *room)
 {
-	char	**ret;
-	char	**tmp;
-	int		i;
+	unsigned long	*ret;
+	unsigned long	hash;
+	int				i;
 
 	i = 0;
-	if (!(ret = (char**)ft_memalloc(sizeof(char*))))
+	hash = ft_hash(room);
+	if (!(ret = (unsigned long*)ft_memalloc(sizeof(unsigned long))) || hash == 0)
 		return (NULL);
-	ret[0] = NULL;
-	while (in->links && in->links[i])
+	ret[0] = 0;
+	while (in->hash_links[i])
 	{
-		tmp = ft_strsplit(in->links[i], '-');
-		if (ft_strcmp(room, tmp[0]) == 0)
-			add_link_arr(&ret, tmp[1]);
-		if (ft_strcmp(room, tmp[1]) == 0)
-			add_link_arr(&ret, tmp[0]);
+		if (hash == in->hash_links[i][0])
+			add_link_arr(&ret, in->hash_links[i][1]);
+		else if (hash == in->hash_links[i][1])
+			add_link_arr(&ret, in->hash_links[i][0]);
 		i++;
 	}
 	return (ret);
 }
 
-int		add_link(t_map *in, char *link)
+int		add_hash_link(t_map *in, char *link)
 {
 	int		i;
+	char	**splitres;
 
+	splitres = ft_strsplit(link, '-');
+	if (!splitres || !splitres[1])
+		return (0);
 	i = 0;
-	while (in->links && in->links[i])
+	while (in->hash_links && in->hash_links[i])
 		i++;
-	in->links = ft_realloc(in->links, (i + 1) * sizeof(char*), (i + 2) * sizeof(char*));
-	in->links[i] = ft_strdup(link);
-	in->links[i + 1] = NULL;
+	in->hash_links = ft_realloc(in->hash_links, (i + 1) * sizeof(unsigned long*), (i + 2) * sizeof(unsigned long*));
+	in->hash_links[i] = ft_memalloc(3 * sizeof(unsigned long));
+	in->hash_links[i][0] = ft_hash(splitres[0]);
+	in->hash_links[i][1] = ft_hash(splitres[1]);
+	in->hash_links[i][2] = 0;
 	return (1);
 }
 
@@ -93,3 +90,17 @@ int		add_room(t_map *in, char *room)
 	return (1);
 }
 
+void	hash_rooms(t_map *in)
+{
+	int		i;
+	t_table	*ret;
+	if (!in->rooms)
+		return ;
+	if (!(ret = (t_table*)malloc(sizeof(t_table))))
+		return ;
+	ret->data = NULL;
+	ret->size = 0;
+	i = -1;
+	while (in->rooms[++i])
+		in->hash_info->data[ft_hash(in->rooms[i])] = in->rooms[i];
+}

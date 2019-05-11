@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:23:22 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/06 16:38:06 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 10:25:17 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,13 @@ t_map	*init_map(void)
 	map->paths[1] = NULL;
 	map->paths[0][0] = NULL;
 	map->paths[0][1] = NULL;
+	map->hash_paths = (unsigned long**)ft_memalloc(sizeof(unsigned long*) * 2);
+	map->hash_paths[0] = (unsigned long*)ft_memalloc(sizeof(unsigned long) * 2);
+	map->hash_paths[1] = NULL;
+	map->hash_paths[0][0] = 0;
+	map->hash_paths[0][1] = 0;
+	map->hash_info = (t_hashes*)malloc(sizeof(t_hashes));
+	map->hash_info->size = 0;
 	return (map);
 }
 
@@ -72,25 +79,30 @@ int		main(void)
 			{
 				map->start = ft_strsplit(line, ' ')[0];
 				map->paths[0][0] = ft_strdup(map->start);
+				map->hash_paths[0][0] = ft_hash(map->start);
+				map->hash_start = ft_hash(map->start);
 			}
 			if (ft_strcmp(tmp, "##end") == 0)
+			{
 				map->end = ft_strsplit(line, ' ')[0];
+				map->hash_end = ft_hash(map->end);
+			}
 			free(tmp);
 			tmp = NULL;
 		}
-		else
-		{
 			if (ft_strchr(line, '-'))
-				add_link(map, line);
+				add_hash_link(map, line);
 			else if (ft_strchr(line, ' '))
 				add_room(map, ft_strsplit(line, ' ')[0]);
-		}
 	}
 	ft_printf("\n");
-	step(map);
-	map->paths = best_paths(map);
+	hash_rooms(map);
+	hash_step(map);
+	map->hash_paths = best_hash_paths(map);
 	print_paths(map);
 	free_map(map);
-	//while (1)
-	//	;
+	while (1)
+	{
+
+	}
 }

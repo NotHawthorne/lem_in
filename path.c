@@ -6,23 +6,14 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 05:10:42 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/06 21:43:59 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 09:59:32 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-void	print_path(char **path)
-{
-	int	i;
-
-	i = 0;
-	while (path[i])
-		ft_printf("%s->", path[i++]);
-	ft_printf("\n");
-}
-
-void	add_path(char ***paths, char **path, char *room, t_map *in)
+void	add_hash_path(unsigned long **paths, unsigned long *path,
+					unsigned long room, t_map *in)
 {
 	int	i;
 	int	n;
@@ -31,108 +22,79 @@ void	add_path(char ***paths, char **path, char *room, t_map *in)
 	i = 0;
 	while (paths[i])
 		i++;
-	paths = (char***)ft_realloc(paths, sizeof(char**) * (i + 1), sizeof(char**) * (i + 2));
+	paths = (unsigned long**)ft_realloc(paths, sizeof(unsigned long*) * (i + 1), sizeof(unsigned long*) * (i + 2));
 	n = 0;
 	while (path[n])
 		n++;
-	paths[i] = (char**)ft_memalloc(sizeof(char*) * (n + 2));
-	paths[i + 1] = NULL;
+	paths[i] = (unsigned long*)ft_memalloc(sizeof(unsigned long) * (n + 2));
+	paths[i + 1] = 0;
 	x = 0;
 	while (path[x] && x < n)
 	{
-		paths[i][x] = ft_strdup(path[x]);
+		paths[i][x] = path[x];
 		x++;
 	}
-	paths[i][n] = ft_strdup(room);
-	paths[i][n + 1] = NULL;
-	in->paths = paths;
+	paths[i][n] = room;
+	paths[i][n + 1] = 0;
+	in->hash_paths = paths;
 }
 
-void	append_path(char ***paths, char **path, char *room, t_map *in, int index)
+int		is_valid_hash_path(unsigned long *path, t_map *in)
 {
-	int	i;
-
-	i = 0;
-	ft_printf("BEFORE\n");
-	print_path(path);
-	while (path[i])
-		i++;
-	path = (char**)ft_realloc(path, sizeof(char*) * (i + 1), sizeof(char*) * (i + 2));
-	path[i] = room;
-	path[i + 1] = NULL;
-	paths[index] = path;
-	in->paths = paths;
-	ft_printf("AFTER\n");
-	print_path(path);
-}
-
-int		is_valid_path(char **path, t_map *in)
-{
-	int	i;
-	int	fs;
-	int	fe;
+	int		i;
+	int		fs;
+	int		fe;
 
 	i = 0;
 	fs = 0;
 	fe = 0;
 	while (path[i])
 	{
-		if (ft_strcmp(path[i], in->start) == 0)
+		if (path[i] == in->hash_start)
 			fs += 1;
-		if (ft_strcmp(path[i], in->end) == 0)
+		if (path[i] == in->hash_end)
 			fe += 1;
-		if (fs == 1 && fe == 1)
+		if (fs >= 1 && fe >= 1)
 			return (1);
 		i++;
 	}
 	return (0);
 }
 
-int		check_path(char **path, char *room, t_map *in)
+int		check_hash_path(unsigned long *path, unsigned long room, t_map *in)
 {
 	int	i;
 
 	i = -1;
 	while (path[++i])
-		if (ft_strcmp(path[i], room) == 0 || ft_strcmp(path[i], in->end) == 0)
+		if (path[i] == room || path[i] == in->hash_end)
 			return (0);
 	return (1);
 }
 
-int		step(t_map *in)
+int		hash_step(t_map *in)
 {
 	int		i;
 	int		x;
 	int		n;
-	char	**links;
-	int		found;
-	char	*DEBUG;
+	unsigned long	*links;
 
 	i = 0;
-	found = 0;
-	ft_printf("STEPPING\n");
-	while (in->paths[i])
+	while (in->hash_paths[i])
 	{
 		n = 0;
-		while (in->paths[i][n])
+		while (in->hash_paths[i][n])
 			n++;
 		n--;
-		if (i == 1)
-			DEBUG = in->paths[i - 1][n + 1];
-		links = get_links(in, in->paths[i][n]);
+		links = get_links(in, in->hash_info->data[in->hash_paths[i][n]]);
 		x = 0;
 		while (links[x])
 		{
-			if (check_path(in->paths[i], links[x], in))
-			{
-				add_path(in->paths, in->paths[i], links[x], in);
-				if (ft_strcmp(links[x], in->end) == 0)
-					found++;
-			}
+			if (check_hash_path(in->hash_paths[i], links[x], in))
+				add_hash_path(in->hash_paths, in->hash_paths[i], links[x], in);
 			x++;
 		}
 		i++;
 	}
-	ft_printf("STEPPED\n");
 	return (1);
 }

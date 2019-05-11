@@ -6,25 +6,29 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 01:22:57 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/06 21:43:56 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 09:53:05 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lem_in.h"
 
-int		path_cmp(char **path1, char **path2, t_map *in)
+int		is_independant(unsigned long *path, unsigned long **pathlist, t_map *in)
 {
 	int	i;
+	int	n;
 	int	b;
 
 	i = 0;
-	while (path1[i])
-	{
+	while (pathlist[i]) {
 		b = 0;
-		while (ft_strcmp(path1[i], in->start) && ft_strcmp(path1[i], in->end) && path2[b])
-		{
-			if (!ft_strcmp(path1[i], path2[b]) && ft_strcmp(path2[b], in->start) && ft_strcmp(path2[b], in->end))
-				return (0);
+		while (pathlist[i][b]) {
+			n = 0;
+			while (path[n]) {
+				if (path[n] == pathlist[i][b] &&
+						path[n] != in->hash_start && path[n] != in->hash_end)
+					return (0);
+				n++;
+			}
 			b++;
 		}
 		i++;
@@ -32,84 +36,36 @@ int		path_cmp(char **path1, char **path2, t_map *in)
 	return (1);
 }
 
-int		ft_strstrstr(char **strs, char *str)
+int		independant_hash_paths(unsigned long *path, t_map *in)
 {
-	int	i;
-	int	b;
+	int				i;
+	int				ret;
+	unsigned long	**cur;
 
-	i = 0;
-	while (strs[i])
-	{
-		b = 0;
-		if (ft_strstr(str, strs[i++]))
-			return (1);
-	}
-	return (0);
-}
-
-int		start_end_check(char *str, t_map *in)
-{
-	if (ft_strcmp(str, in->start) && ft_strcmp(str, in->end))
+	if (!(cur = (unsigned long**)malloc(sizeof(unsigned long*) * 2)))
 		return (0);
-	return (1);
-}
-
-int		independant_paths(char **path, t_map *in)
-{
-	int		i;
-	int		y;
-	int		x;
-	char	*currooms;
-
-	i = 0;
-	y = 0;
-	currooms = ft_strjoin_array(path, "");
-	while (in->paths[i])
+	cur[0] = path;
+	cur[1] = NULL;
+	i = -1;
+	ret = 0;
+	while (in->hash_paths[++i])
 	{
-		x = 0;
-		while (in->paths[i][x])
+		if (is_independant(in->hash_paths[i], cur, in))
 		{
-			if (!start_end_check(in->paths[i][x], in) && ft_strstr(currooms, in->paths[i][x]))
-				break;
-			x++;
+			ret++;
+			cur = ft_realloc(cur, sizeof(unsigned long*) * (ret + 1), sizeof(unsigned long*) * (ret + 2));
+			cur[ret + 1] = NULL;
+			cur[ret] = in->hash_paths[i];
 		}
-		if (is_valid_path(in->paths[i], in) && path_cmp(path, in->paths[i], in) && !ft_strcmp(in->end, in->paths[i][x - 1]))
-		{
-			y++;
-			currooms = ft_strjoin(currooms, ft_strjoin_array(in->paths[i], ""));
-		}
-		i++;
 	}
-	return (y);
-}
-
-int		complimentary_path(char ***paths, char **path, t_map *in)
-{
-	int		i;
-	int		b;
-	char	*currooms;
-
-	i = 0;
-	currooms = ft_strjoin_array(path, "");
-	while (paths[i])
-	{
-		b = 0;
-		while (paths[i][b])
-		{
-			if (ft_strstr(currooms, paths[i][b]) && ft_strcmp(paths[i][b], in->start) && ft_strcmp(paths[i][b], in->end))
-				return (0);
-			b++;
-		}
-		i++;
-	}
-	return (1);
+	return (ret);
 }
 
 int		max_flow(t_map *in)
 {
 	int		i;
 	int		b;
-	char	**links;
+	unsigned long	*links;
 
 	i = 0;
 	b = 0;
@@ -122,33 +78,43 @@ int		max_flow(t_map *in)
 	return (i > b ? i : b);
 }
 
-char	***add_to_list(char ***paths, char **path)
+unsigned long **add_to_hash_list(unsigned long **hashlist, unsigned long *hashes)
 {
 	int	i;
 	int	b;
 	int	x;
-
+	
 	i = 0;
 	b = 0;
 	x = 0;
-	while (paths[i])
+	while (hashlist[i])
 		i++;
-	if (paths[0])
-		paths = ft_realloc(paths, sizeof(char**) * (i + 1), sizeof(char**) * (i + 2));
-	while (path[b])
+	if (hashlist[0])
+		hashlist = ft_realloc(hashlist, sizeof(unsigned long*) * (i + 1), sizeof(unsigned long*) * (i + 2));
+	while (hashes[b])
 		b++;
-	paths[i] = (char**)malloc(sizeof(char*) * (b + 1));
-	paths[i + 1] = NULL;
-	paths[i][b] = NULL;
-	while (path[x])
+	hashlist[i] = (unsigned long*)malloc(sizeof(unsigned long) * (b + 1));
+	hashlist[i + 1] = 0;
+	hashlist[i][b] = 0;
+	while (hashes[x])
 	{
-		paths[i][x] = path[x];
+		hashlist[i][x] = hashes[x];
 		x++;
 	}
-	return (paths);
+	return (hashlist);
 }
 
-int		paths_len(char ***paths)
+int		hash_path_num(unsigned long **paths)
+{
+	int	i;
+
+	i = 0;
+	while (paths[i])
+		i++;
+	return (i);
+}
+
+int		hash_paths_len(unsigned long **paths)
 {
 	int	i;
 	int	b;
@@ -161,52 +127,42 @@ int		paths_len(char ***paths)
 		b = 0;
 		while (paths[i][b])
 		{
-			b++;
 			ret++;
+			b++;
 		}
 		i++;
 	}
 	return (ret);
 }
 
-int		path_num(char ***paths)
-{
-	int	i;
-
-	i = 0;
-	while (paths[i])
-		i++;
-	return (i);
-}
-
-char	***best_paths(t_map *in)
+unsigned long	**best_hash_paths(t_map *in)
 {
 	int		i;
-	char	***ret;
+	unsigned long	**ret;
 	int		flow;
 	int		paths;
 
 	flow = max_flow(in);
-	ret = (char***)malloc(sizeof(char**) * 2);
-	ret[1] = NULL;
-	ret[0] = NULL;
+	ret = (unsigned long**)malloc(sizeof(unsigned long*) * 2);
+	ret[1] = 0;
+	ret[0] = 0;
 	paths = 0;
 	while (flow >= 0)
 	{
 		i = 0;
-		while (in->paths[i])
+		while (in->hash_paths[i])
 		{
-			if (independant_paths(in->paths[i], in) >= flow && complimentary_path(ret, in->paths[i], in) && is_valid_path(in->paths[i], in))
-				ret = add_to_list(ret, in->paths[i]);
-			if (path_num(ret) == flow + 1)
+			if (independant_hash_paths(in->hash_paths[i], in) >= flow && is_independant(in->hash_paths[i], ret, in) && is_valid_hash_path(in->hash_paths[i], in))
+				ret = add_to_hash_list(ret, in->hash_paths[i]);
+			if (hash_path_num(ret) == flow + 1)
 				break;
 			i++;
 		}
-		if (in->ants < paths_len(ret) / (flow + 1) && flow > 0)
+		if (in->ants < hash_paths_len(ret) / (flow + 1) && flow > 0)
 		{
 			free(ret);
 			ret = NULL;
-			ret = (char***)malloc(sizeof(char**) * 2);
+			ret = (unsigned long**)malloc(sizeof(unsigned long*) * 2);
 			ret[1] = NULL;
 			ret[0] = NULL;
 		}

@@ -1,0 +1,16 @@
+long_hardmap:
+	old: 0.008s
+	new: 0.007s
+	usually no real difference
+
+long_Chloe:
+	old: [CRASHED]
+	new: 0.376s
+
+subject-1.map
+	old: 0.008s
+	new: 0.006s
+
+subject-2.map
+	old: 0.005s
+	new: 0.005s

@@ -35,9 +35,7 @@ void	list_addroom(t_path *path, char *name)
 		list_makeroom(&rooms, name);
 	}
 	else
-	{
 		list_makeroom(&(path->rooms), name);
-	}
 }
 
 void	list_makeant(t_ant **ants, t_room *rooms, int ant_nb)
@@ -68,10 +66,7 @@ void	list_addant(t_ant **ants, t_room *rooms, int ant_nb)
 		list_makeant(&cpy_ants, rooms, ant_nb);
 	}
 	else
-	{
 		list_makeant(ants, rooms, ant_nb);
-	}
-	//ft_printf("adding ant #%d, room: %s", ant_nb, rooms->name);
 }
 
 void	remove_ant(t_ant **cpy, t_ant **ants)
@@ -159,10 +154,6 @@ void	release_ants(t_path *paths, int nb_ants)
 		step_ants(&ants);
 		ft_printf("\n");
 	}
-	//while (paths)
-	//{
-	//	paths = paths->next;
-	//}
 }
 
 void	print_paths(t_map *map)
@@ -173,18 +164,14 @@ void	print_paths(t_map *map)
 
 	paths = NULL;
 	i = 0;
-	while (map->paths[i])
+	while (map->hash_paths[i])
 	{
-		if (is_valid_path(map->paths[i], map))
+		if (is_valid_hash_path(map->hash_paths[i], map))
 		{
 			n = 0;
 			new_path(&paths);
-			while (map->paths[i][n])
-			{
-				list_addroom(paths, map->paths[i][n]);
-				ft_printf("%s->", map->paths[i][n++]);
-			}
-			ft_printf(" (%d independant paths)\n", independant_paths(map->paths[i], map));
+			while (map->hash_paths[i][n])
+				list_addroom(paths, map->hash_info->data[map->hash_paths[i][n++]]);
 		}
 		i++;
 	}
