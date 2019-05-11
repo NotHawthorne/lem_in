@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:23:22 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/11 10:25:17 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 16:37:34 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int		main(void)
 	while (get_next_line(0, &line) > 0)
 	{
 		ft_printf("%s\n", line);
-		if (line[0] == '#')
+		while (line[0] == '#')
 		{
 			tmp = ft_strdup(line);
 			if (get_next_line(0, &line) == 0)
@@ -99,10 +99,24 @@ int		main(void)
 	hash_rooms(map);
 	hash_step(map);
 	map->hash_paths = best_hash_paths(map);
+	/*int i = 0;
+	while (map->hash_paths[i])
+	{
+		int b = 0;
+		while (map->hash_paths[i][b])
+		{
+			ft_printf("%s", map->hash_info->data[map->hash_paths[i][b]]);
+			b++;
+			if (map->hash_paths[i][b])
+				ft_printf("=>");
+		}
+		ft_printf("\n");
+		i++;
+	}*/
 	print_paths(map);
 	free_map(map);
-	while (1)
+	/*while (1)
 	{
 
-	}
+	}*/
 }

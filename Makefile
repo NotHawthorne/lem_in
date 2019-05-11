@@ -6,7 +6,7 @@
 #    By: alkozma <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/03/13 18:06:36 by alkozma           #+#    #+#              #
-#    Updated: 2019/05/10 06:17:52 by alkozma          ###   ########.fr        #
+#    Updated: 2019/05/11 16:11:47 by alkozma          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ HEADERS = lem_in.h \
 		  includes/libft.h \
 		  ft_hashtables.h
 
-FLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 all: $(NAME)
 

@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/15 16:17:34 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/11 10:35:22 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 15:59:58 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct		s_hashes
 {
 	char			*data[MAX_ROOMS];
 	unsigned long	keys[MAX_ROOMS];
+	unsigned long	dead_keys[MAX_ROOMS];
 	size_t			size;
 }					t_hashes;
 

@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:41:11 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/11 09:53:32 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 16:29:21 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,12 @@ unsigned long *get_links(t_map *in, char *room)
 	int				i;
 
 	i = 0;
-	hash = ft_hash(room);
-	if (!(ret = (unsigned long*)ft_memalloc(sizeof(unsigned long))) || hash == 0)
+	if (!(ret = (unsigned long*)ft_memalloc(sizeof(unsigned long))))
 		return (NULL);
 	ret[0] = 0;
+	if (!room)
+		return (ret);
+	hash = ft_hash(room);
 	while (in->hash_links[i])
 	{
 		if (hash == in->hash_links[i][0])
@@ -64,7 +66,7 @@ int		add_hash_link(t_map *in, char *link)
 	char	**splitres;
 
 	splitres = ft_strsplit(link, '-');
-	if (!splitres || !splitres[1])
+	if (!splitres || !splitres[1] || !splitres[0])
 		return (0);
 	i = 0;
 	while (in->hash_links && in->hash_links[i])
@@ -103,4 +105,5 @@ void	hash_rooms(t_map *in)
 	i = -1;
 	while (in->rooms[++i])
 		in->hash_info->data[ft_hash(in->rooms[i])] = in->rooms[i];
+	ft_printf("%d\n", i);
 }

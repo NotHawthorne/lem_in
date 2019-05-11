@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 01:22:57 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/11 09:53:05 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/11 15:20:41 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int		is_independant(unsigned long *path, unsigned long **pathlist, t_map *in)
 	int	b;
 
 	i = 0;
+	if (!is_valid_hash_path(path, in))
+			return (0);
 	while (pathlist[i]) {
 		b = 0;
 		while (pathlist[i][b]) {
