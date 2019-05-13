@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 02:41:11 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/11 16:29:21 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/13 05:10:38 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,44 +38,29 @@ void	add_link_arr(unsigned long **tst, unsigned long room)
 
 unsigned long *get_links(t_map *in, char *room)
 {
-	unsigned long	*ret;
-	unsigned long	hash;
-	int				i;
-
-	i = 0;
-	if (!(ret = (unsigned long*)ft_memalloc(sizeof(unsigned long))))
-		return (NULL);
-	ret[0] = 0;
-	if (!room)
-		return (ret);
-	hash = ft_hash(room);
-	while (in->hash_links[i])
-	{
-		if (hash == in->hash_links[i][0])
-			add_link_arr(&ret, in->hash_links[i][1]);
-		else if (hash == in->hash_links[i][1])
-			add_link_arr(&ret, in->hash_links[i][0]);
-		i++;
-	}
-	return (ret);
+	return (in->hash_info->matrix[ft_hash(room)]);
 }
 
 int		add_hash_link(t_map *in, char *link)
 {
-	int		i;
+	unsigned long	h1;
+	unsigned long	h2;
 	char	**splitres;
+	size_t	arr_sz;
 
 	splitres = ft_strsplit(link, '-');
 	if (!splitres || !splitres[1] || !splitres[0])
 		return (0);
-	i = 0;
-	while (in->hash_links && in->hash_links[i])
-		i++;
-	in->hash_links = ft_realloc(in->hash_links, (i + 1) * sizeof(unsigned long*), (i + 2) * sizeof(unsigned long*));
-	in->hash_links[i] = ft_memalloc(3 * sizeof(unsigned long));
-	in->hash_links[i][0] = ft_hash(splitres[0]);
-	in->hash_links[i][1] = ft_hash(splitres[1]);
-	in->hash_links[i][2] = 0;
+	h1 = ft_hash(splitres[0]);
+	h2 = ft_hash(splitres[1]);
+	arr_sz = 0;
+	while (in->hash_info->matrix[h1][arr_sz])
+		arr_sz++;
+	in->hash_info->matrix[h1][arr_sz] = h2;
+	arr_sz = 0;
+	while (in->hash_info->matrix[h2][arr_sz])
+		arr_sz++;
+	in->hash_info->matrix[h2][arr_sz] = h1;
 	return (1);
 }
 
@@ -105,5 +90,4 @@ void	hash_rooms(t_map *in)
 	i = -1;
 	while (in->rooms[++i])
 		in->hash_info->data[ft_hash(in->rooms[i])] = in->rooms[i];
-	ft_printf("%d\n", i);
 }

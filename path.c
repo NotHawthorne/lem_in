@@ -6,7 +6,7 @@
 /*   By: alkozma <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/23 05:10:42 by alkozma           #+#    #+#             */
-/*   Updated: 2019/05/11 16:35:45 by alkozma          ###   ########.fr       */
+/*   Updated: 2019/05/13 05:10:35 by alkozma          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,6 @@ int		hash_step(t_map *in)
 	i = 0;
 	while (in->hash_paths[i])
 	{
-		/*if (cur_len >= (cur_flow / in->ants))
-			break;*/
-		//printf("SEARCHED: %d | CUR_FLOW: NaN | CUR_LEN: %d\n", i, cur_len);
 		n = 0;
 		while (in->hash_paths[i][n])
 			n++;
@@ -99,12 +96,7 @@ int		hash_step(t_map *in)
 			cur_len = n;
 		if (n)
 			n--;
-		ft_printf("%s\n", in->start);
-		ft_printf("%lu | %d\n", in->hash_start, n);
-		//ft_printf("%s\n", in->hash_info->data[in->hash_paths[i][n]]);
 		links = get_links(in, in->hash_info->data[in->hash_paths[i][n]]);
-		if (!links || !links[0])
-			ft_printf("IM DEAD\n");
 		x = 0;
 		while (links[x])
 		{
@@ -112,8 +104,6 @@ int		hash_step(t_map *in)
 				add_hash_path(in->hash_paths, in->hash_paths[i], links[x], in);
 			x++;
 		}
-		/*if (x > cur_flow)
-			cur_flow = x;*/
 		i++;
 	}
 	return (1);
